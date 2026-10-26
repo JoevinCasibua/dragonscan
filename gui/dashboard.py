@@ -294,7 +294,7 @@ class DragonScanApp(tk.Tk):
         self.top_hud.lift()
 
         tk.Label(
-            self.top_hud, text="● LIVE CAMERA MODULE 3 OPTICAL FEED (REAL-TIME HUD OVERLAY)",
+            self.top_hud, text="● LIVE LOGITECH C270 USB OPTICAL FEED (REAL-TIME HUD OVERLAY)",
             font=("Segoe UI", 9, "bold"), bg="#070c18", fg=CLR_GREEN
         ).pack(side=tk.LEFT)
 

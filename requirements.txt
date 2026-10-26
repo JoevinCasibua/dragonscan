@@ -1,0 +1,12 @@
+# DragonScan Dependencies for Raspberry Pi 5 & Desktop
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=9.5.0
+pyserial>=3.5
+
+# Optional ML & Acceleration
+scikit-learn>=1.3.0
+ultralytics>=8.3.0  # Optional: For YOLOv11 / COCO object detection (yolo11n.pt)
+
+# Raspberry Pi 5 Hardware Specific (Install on Pi OS via apt or pip)
+# sudo apt install -y python3-picamera2 python3-libgpiod

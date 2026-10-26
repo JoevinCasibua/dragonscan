@@ -1,0 +1,143 @@
+{
+  "scan_id": "OCT14_IMG_4868",
+  "category": "UNRIPE",
+  "timestamp": 1792171354.3102007,
+  "date_iso": "2026-10-17 01:22:34",
+  "original_image": "OCT14_IMG_4868_original.png",
+  "detection_image": "OCT14_IMG_4868_detection.png",
+  "raw_image": "original\\OCT14_IMG_4868_original.png",
+  "analytics_image": "detection\\OCT14_IMG_4868_detection.png",
+  "vision": {
+    "rotten_percentage": 7.3,
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_ripe": false,
+    "is_unripe": true,
+    "dimensions": {
+      "length_mm": 304.5,
+      "width_mm": 228.3,
+      "aspect_ratio": 1.33,
+      "perimeter_mm": 1125.7,
+      "surface_area_cm2": 694.2,
+      "circularity": 0.688
+    },
+    "color_distribution": {
+      "ripe_peel_percentage": 1.15,
+      "bract_green_percentage": 50.41,
+      "necrotic_rot_percentage": 7.3
+    },
+    "skin_texture": {
+      "roughness_variance": 108.34,
+      "lesion_count": 98,
+      "max_lesion_area_mm2": 2918.11,
+      "skin_uniformity_std": 50.4
+    },
+    "needs_desegregation": false,
+    "yolo_detection": {
+      "detected": true,
+      "backend": "ULTRALYTICS_YOLO",
+      "confidence": 54.6,
+      "bbox": [
+        348,
+        181,
+        628,
+        776
+      ],
+      "label": "bird",
+      "boxes": [
+        {
+          "bbox": [
+            348,
+            181,
+            976,
+            957
+          ],
+          "confidence": 0.546,
+          "class": "bird"
+        }
+      ]
+    }
+  },
+  "radar_45_deg": {
+    "angle_degrees": 45.0,
+    "frequency_ghz": 60.0,
+    "peak_power_db": 29.75,
+    "peak_distance_cm": 1.56,
+    "internal_decay_index": 0.073,
+    "dielectric_constant": 63.2,
+    "is_internal_rot_flag": false,
+    "mean_spectrum": [
+      9.341105935631585,
+      27.569437158612644,
+      30.71397953668385,
+      7.4125159585189415,
+      0.9092568134245087,
+      0.38188030609571416,
+      0.34882770190896284,
+      0.33340158683980725,
+      0.30732374566189974,
+      0.2682950834559317,
+      0.2884804670477782,
+      0.2986154785074441,
+      0.29152288729897147,
+      0.3353623001662322,
+      0.3443289166635032,
+      0.3175205773642382,
+      0.3181792054717605,
+      0.332991613273871,
+      0.33306614883677077,
+      0.3014994387158505,
+      0.2905578448741209,
+      0.3105952042734422,
+      0.32753698332797804,
+      0.3515782864839744,
+      0.3476522302485933,
+      0.34214985597202724,
+      0.3267690072832197,
+      0.31609323010541196,
+      0.3035260177968779,
+      0.2857727488479782,
+      0.3141813832689738,
+      0.33155296846163984,
+      0.2929813612627012,
+      0.2923829521158193,
+      0.30609536575641116,
+      0.321132499538098,
+      0.2911610676331625,
+      0.3015281114837712,
+      0.3277983684855112,
+      0.3287563361624233,
+      0.31881588266130567,
+      0.2904772325852116,
+      0.31497094606161974,
+      0.34470054923106985,
+      0.3504224630356518,
+      0.31408791029181665,
+      0.3215330945392193,
+      0.32472633758080105,
+      0.3255069351040824,
+      0.33245317283442605,
+      0.33744677013163804,
+      0.3303859075748977,
+      0.30319286121361516,
+      0.28754756009981464,
+      0.2881782642088192,
+      0.2849957168947412,
+      0.299820684670757,
+      0.2794130457025664,
+      0.28163391723666187,
+      0.2964359238574517,
+      0.3077360711412241,
+      0.31755069228956456,
+      0.3088438482287126,
+      0.3114848039328932,
+      0.32131985472047714
+    ]
+  },
+  "fusion": {
+    "verdict": "UNRIPE",
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_desegregate": false,
+    "composite_defect_percentage": 7.3,
+    "reason": "Immature green bracts and peel (Unripe)"
+  }
+}

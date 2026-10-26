@@ -1,0 +1,143 @@
+{
+  "scan_id": "OCT14_IMG_4943",
+  "category": "ROTTEN",
+  "timestamp": 1792171407.9598432,
+  "date_iso": "2026-10-17 01:23:27",
+  "original_image": "OCT14_IMG_4943_original.png",
+  "detection_image": "OCT14_IMG_4943_detection.png",
+  "raw_image": "ROTTEN\\original\\OCT14_IMG_4943_original.png",
+  "analytics_image": "ROTTEN\\detection\\OCT14_IMG_4943_detection.png",
+  "vision": {
+    "rotten_percentage": 24.5,
+    "quality_grade": "REJECT / DESEGREGATE",
+    "is_ripe": false,
+    "is_unripe": false,
+    "dimensions": {
+      "length_mm": 218.8,
+      "width_mm": 215.5,
+      "aspect_ratio": 1.02,
+      "perimeter_mm": 1346.3,
+      "surface_area_cm2": 326.27,
+      "circularity": 0.226
+    },
+    "color_distribution": {
+      "ripe_peel_percentage": 0.75,
+      "bract_green_percentage": 39.4,
+      "necrotic_rot_percentage": 24.5
+    },
+    "skin_texture": {
+      "roughness_variance": 127.15,
+      "lesion_count": 120,
+      "max_lesion_area_mm2": 1621.46,
+      "skin_uniformity_std": 37.5
+    },
+    "needs_desegregation": true,
+    "yolo_detection": {
+      "detected": true,
+      "backend": "ULTRALYTICS_YOLO",
+      "confidence": 61.2,
+      "bbox": [
+        334,
+        2,
+        906,
+        920
+      ],
+      "label": "banana",
+      "boxes": [
+        {
+          "bbox": [
+            334,
+            2,
+            1240,
+            922
+          ],
+          "confidence": 0.612,
+          "class": "banana"
+        }
+      ]
+    }
+  },
+  "radar_45_deg": {
+    "angle_degrees": 45.0,
+    "frequency_ghz": 60.0,
+    "peak_power_db": 29.32,
+    "peak_distance_cm": 1.56,
+    "internal_decay_index": 0.2065,
+    "dielectric_constant": 65.41,
+    "is_internal_rot_flag": false,
+    "mean_spectrum": [
+      9.351010459320442,
+      26.547895746459922,
+      29.250072901882582,
+      6.887369134637066,
+      0.8299892393656823,
+      0.36612627926163654,
+      0.2872398921802125,
+      0.3164758597479689,
+      0.2959956394395578,
+      0.28924114624612096,
+      0.2882537988559088,
+      0.29840613719156855,
+      0.31987030994608756,
+      0.2981463261489599,
+      0.2936071027083702,
+      0.3187280008298964,
+      0.34088004366368785,
+      0.32876545982637023,
+      0.321282616308685,
+      0.29957388444681526,
+      0.2694307992678241,
+      0.3397968646671374,
+      0.32641177969116236,
+      0.2995937644728969,
+      0.3129663828902798,
+      0.3153778032642364,
+      0.31109526491317296,
+      0.32821693276925157,
+      0.29705855809038695,
+      0.3150577826101796,
+      0.3195539549611992,
+      0.29130652046704286,
+      0.28314445111673986,
+      0.2959407430928112,
+      0.29963460949417586,
+      0.31352743702875685,
+      0.28743384393950666,
+      0.30842841090332596,
+      0.3089861270809972,
+      0.298791173580922,
+      0.32680740886214027,
+      0.3102399606568627,
+      0.286304209062002,
+      0.2951468534659866,
+      0.30897810292699807,
+      0.2813727078399645,
+      0.2830477115348864,
+      0.3006228586296418,
+      0.30029492460694707,
+      0.2713170512926786,
+      0.29393273589765334,
+      0.3166657366544692,
+      0.34601671193888767,
+      0.3154050533559225,
+      0.30338937465122195,
+      0.3086794744722856,
+      0.31248681291411967,
+      0.3133823823758921,
+      0.32702828281973456,
+      0.31686224871400626,
+      0.3016432726078302,
+      0.287384675200552,
+      0.32678349078035734,
+      0.3256720122022824,
+      0.2963751061220382
+    ]
+  },
+  "fusion": {
+    "verdict": "ROTTEN",
+    "quality_grade": "REJECT / DESEGREGATE",
+    "is_desegregate": true,
+    "composite_defect_percentage": 24.5,
+    "reason": "Necrotic peel decay exceeding segregation threshold"
+  }
+}

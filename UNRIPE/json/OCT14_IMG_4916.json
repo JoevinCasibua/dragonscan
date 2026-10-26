@@ -1,0 +1,143 @@
+{
+  "scan_id": "OCT14_IMG_4916",
+  "category": "UNRIPE",
+  "timestamp": 1792171388.6898599,
+  "date_iso": "2026-10-17 01:23:08",
+  "original_image": "OCT14_IMG_4916_original.png",
+  "detection_image": "OCT14_IMG_4916_detection.png",
+  "raw_image": "original\\OCT14_IMG_4916_original.png",
+  "analytics_image": "detection\\OCT14_IMG_4916_detection.png",
+  "vision": {
+    "rotten_percentage": 10.76,
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_ripe": false,
+    "is_unripe": false,
+    "dimensions": {
+      "length_mm": 304.5,
+      "width_mm": 228.3,
+      "aspect_ratio": 1.33,
+      "perimeter_mm": 1065.7,
+      "surface_area_cm2": 696.6,
+      "circularity": 0.771
+    },
+    "color_distribution": {
+      "ripe_peel_percentage": 0.38,
+      "bract_green_percentage": 24.84,
+      "necrotic_rot_percentage": 10.76
+    },
+    "skin_texture": {
+      "roughness_variance": 80.34,
+      "lesion_count": 135,
+      "max_lesion_area_mm2": 1957.91,
+      "skin_uniformity_std": 49.73
+    },
+    "needs_desegregation": false,
+    "yolo_detection": {
+      "detected": true,
+      "backend": "ULTRALYTICS_YOLO",
+      "confidence": 38.0,
+      "bbox": [
+        456,
+        76,
+        631,
+        668
+      ],
+      "label": "banana",
+      "boxes": [
+        {
+          "bbox": [
+            456,
+            76,
+            1087,
+            744
+          ],
+          "confidence": 0.38,
+          "class": "banana"
+        }
+      ]
+    }
+  },
+  "radar_45_deg": {
+    "angle_degrees": 45.0,
+    "frequency_ghz": 60.0,
+    "peak_power_db": 29.63,
+    "peak_distance_cm": 1.56,
+    "internal_decay_index": 0.1076,
+    "dielectric_constant": 63.78,
+    "is_internal_rot_flag": false,
+    "mean_spectrum": [
+      9.420607535228454,
+      27.311477263689767,
+      30.312333441610484,
+      7.2585190348337205,
+      0.913377629230243,
+      0.3925399351214473,
+      0.335392989280651,
+      0.3269662838245952,
+      0.32991286103181483,
+      0.29781818137016186,
+      0.2931361487773254,
+      0.29479327278352957,
+      0.2832460247113632,
+      0.2886708476839289,
+      0.3313113054628605,
+      0.319728447303106,
+      0.30718298192786636,
+      0.2989056384676771,
+      0.276635190745781,
+      0.309563420863102,
+      0.3264372105307726,
+      0.2839443437564251,
+      0.28055738425069676,
+      0.31251944506443685,
+      0.3210309936910456,
+      0.2927326335650867,
+      0.3019865644473014,
+      0.3174364077619796,
+      0.30933798605018215,
+      0.3169811390918855,
+      0.3180048087356798,
+      0.32616048697204764,
+      0.3201121047487481,
+      0.2951600330108813,
+      0.2991633405784675,
+      0.2933631338794001,
+      0.2602898925782737,
+      0.28458009734979445,
+      0.30087172746020274,
+      0.29473718719264014,
+      0.27545894013898164,
+      0.3061848002600258,
+      0.32422188145581265,
+      0.3194134950204227,
+      0.2875887695793658,
+      0.2758508174611069,
+      0.30822897526618215,
+      0.3109045681395973,
+      0.32222008308171296,
+      0.29167635876283676,
+      0.30709475372520856,
+      0.2991664076431315,
+      0.31675119408770014,
+      0.33885211234093504,
+      0.3316253864745007,
+      0.2959619021884201,
+      0.2883549974177338,
+      0.31022089427539334,
+      0.3302911394110268,
+      0.27021518291764807,
+      0.3041884322328805,
+      0.3122824370519203,
+      0.3213038495255153,
+      0.3316394870975229,
+      0.26564695229710966
+    ]
+  },
+  "fusion": {
+    "verdict": "RIPE",
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_desegregate": false,
+    "composite_defect_percentage": 10.76,
+    "reason": "Healthy sound fruit with firm flesh and vibrant peel"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "scan_id": "OCT14_IMG_4875",
+  "category": "UNRIPE",
+  "timestamp": 1792171359.5378006,
+  "date_iso": "2026-10-17 01:22:39",
+  "original_image": "OCT14_IMG_4875_original.png",
+  "detection_image": "OCT14_IMG_4875_detection.png",
+  "raw_image": "original\\OCT14_IMG_4875_original.png",
+  "analytics_image": "detection\\OCT14_IMG_4875_detection.png",
+  "vision": {
+    "rotten_percentage": 5.83,
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_ripe": false,
+    "is_unripe": true,
+    "dimensions": {
+      "length_mm": 304.5,
+      "width_mm": 228.3,
+      "aspect_ratio": 1.33,
+      "perimeter_mm": 1152.4,
+      "surface_area_cm2": 693.75,
+      "circularity": 0.656
+    },
+    "color_distribution": {
+      "ripe_peel_percentage": 0.09,
+      "bract_green_percentage": 62.16,
+      "necrotic_rot_percentage": 5.83
+    },
+    "skin_texture": {
+      "roughness_variance": 60.83,
+      "lesion_count": 81,
+      "max_lesion_area_mm2": 1365.05,
+      "skin_uniformity_std": 57.04
+    },
+    "needs_desegregation": false,
+    "yolo_detection": {
+      "detected": true,
+      "backend": "ULTRALYTICS_YOLO",
+      "confidence": 36.0,
+      "bbox": [
+        490,
+        0,
+        786,
+        390
+      ],
+      "label": "banana",
+      "boxes": [
+        {
+          "bbox": [
+            490,
+            0,
+            1276,
+            390
+          ],
+          "confidence": 0.36,
+          "class": "banana"
+        }
+      ]
+    }
+  },
+  "radar_45_deg": {
+    "angle_degrees": 45.0,
+    "frequency_ghz": 60.0,
+    "peak_power_db": 29.82,
+    "peak_distance_cm": 1.56,
+    "internal_decay_index": 0.0583,
+    "dielectric_constant": 62.96,
+    "is_internal_rot_flag": false,
+    "mean_spectrum": [
+      9.40923460716161,
+      27.75097015668449,
+      30.9601036905004,
+      7.54360988687176,
+      0.8721068888527664,
+      0.3797846715382225,
+      0.33494200298578547,
+      0.3161646947263874,
+      0.2837061490019063,
+      0.2741957224363266,
+      0.2901677819058221,
+      0.32432095114390874,
+      0.32391896884044324,
+      0.31724842405908604,
+      0.3111346981033817,
+      0.30189187174695814,
+      0.3074397273685859,
+      0.31112984252012466,
+      0.29860037922323523,
+      0.3037529790989584,
+      0.28812309440940387,
+      0.30908961847227717,
+      0.3244186077993458,
+      0.28144527017661836,
+      0.2878889378416693,
+      0.2921459904267813,
+      0.3291852877314301,
+      0.32603572656457425,
+      0.3097219252016124,
+      0.2880712874421955,
+      0.28495703769843334,
+      0.2880557397970037,
+      0.3033706864777329,
+      0.3561361619572753,
+      0.35075657210501987,
+      0.30610886083945293,
+      0.2937330603078415,
+      0.30001586480105213,
+      0.30199094705566554,
+      0.31251934048894353,
+      0.3002972930818518,
+      0.3189015472983914,
+      0.32577810159323245,
+      0.3140072969521898,
+      0.3106667809851311,
+      0.2991353183730243,
+      0.3112266492450626,
+      0.2955061319002052,
+      0.31147400467029923,
+      0.3077452017417818,
+      0.31002845688183583,
+      0.2866647942740106,
+      0.2741828913577511,
+      0.27552679967566324,
+      0.28877719276006103,
+      0.29294669816346036,
+      0.31850632464204637,
+      0.3008849016002491,
+      0.3310541084984867,
+      0.31280056906447623,
+      0.3212306007957216,
+      0.3076499464651001,
+      0.3076680949880492,
+      0.3081335194673982,
+      0.2652505825175847
+    ]
+  },
+  "fusion": {
+    "verdict": "UNRIPE",
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_desegregate": false,
+    "composite_defect_percentage": 5.83,
+    "reason": "Immature green bracts and peel (Unripe)"
+  }
+}

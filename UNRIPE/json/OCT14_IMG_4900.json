@@ -1,0 +1,153 @@
+{
+  "scan_id": "OCT14_IMG_4900",
+  "category": "UNRIPE",
+  "timestamp": 1792171377.8792763,
+  "date_iso": "2026-10-17 01:22:57",
+  "original_image": "OCT14_IMG_4900_original.png",
+  "detection_image": "OCT14_IMG_4900_detection.png",
+  "raw_image": "original\\OCT14_IMG_4900_original.png",
+  "analytics_image": "detection\\OCT14_IMG_4900_detection.png",
+  "vision": {
+    "rotten_percentage": 9.67,
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_ripe": false,
+    "is_unripe": false,
+    "dimensions": {
+      "length_mm": 304.5,
+      "width_mm": 228.3,
+      "aspect_ratio": 1.33,
+      "perimeter_mm": 1065.7,
+      "surface_area_cm2": 696.6,
+      "circularity": 0.771
+    },
+    "color_distribution": {
+      "ripe_peel_percentage": 1.37,
+      "bract_green_percentage": 20.21,
+      "necrotic_rot_percentage": 9.67
+    },
+    "skin_texture": {
+      "roughness_variance": 89.88,
+      "lesion_count": 109,
+      "max_lesion_area_mm2": 1592.6,
+      "skin_uniformity_std": 54.22
+    },
+    "needs_desegregation": false,
+    "yolo_detection": {
+      "detected": true,
+      "backend": "ULTRALYTICS_YOLO",
+      "confidence": 74.0,
+      "bbox": [
+        111,
+        251,
+        1018,
+        709
+      ],
+      "label": "bird",
+      "boxes": [
+        {
+          "bbox": [
+            111,
+            251,
+            1129,
+            960
+          ],
+          "confidence": 0.74,
+          "class": "bird"
+        },
+        {
+          "bbox": [
+            162,
+            251,
+            1103,
+            723
+          ],
+          "confidence": 0.37,
+          "class": "bird"
+        }
+      ]
+    }
+  },
+  "radar_45_deg": {
+    "angle_degrees": 45.0,
+    "frequency_ghz": 60.0,
+    "peak_power_db": 29.66,
+    "peak_distance_cm": 1.56,
+    "internal_decay_index": 0.0967,
+    "dielectric_constant": 63.6,
+    "is_internal_rot_flag": false,
+    "mean_spectrum": [
+      9.419926364170921,
+      27.413874147906736,
+      30.41967581143457,
+      7.289849278645024,
+      0.8794326865729621,
+      0.3741478009542078,
+      0.3348887212389614,
+      0.32423920930573213,
+      0.30486001525966927,
+      0.30753973787481764,
+      0.32469679888660397,
+      0.29778426379728895,
+      0.2883136660837211,
+      0.30997038294278445,
+      0.30392495566258504,
+      0.2964990802206564,
+      0.31460447365619737,
+      0.3105089228065863,
+      0.3294482547115503,
+      0.32442997620588154,
+      0.3195522075966587,
+      0.3238566514273389,
+      0.31646749667921387,
+      0.31721953378697226,
+      0.2985020021229904,
+      0.3013020120542007,
+      0.30951954358185324,
+      0.29724516311926885,
+      0.28967426678201436,
+      0.2800028073833319,
+      0.2890179906987154,
+      0.29336222509531545,
+      0.3097441256927791,
+      0.30743446328641766,
+      0.3119195155042188,
+      0.30504101209474077,
+      0.30926115497042095,
+      0.32590280908363944,
+      0.3037459496874924,
+      0.3039384721006101,
+      0.27981659624989197,
+      0.2920848683462762,
+      0.29261907529440573,
+      0.3051356010981046,
+      0.31537960571537704,
+      0.29110952591475475,
+      0.27609090482950666,
+      0.30160468035286303,
+      0.29782510281124985,
+      0.32148546220255975,
+      0.3122922504040736,
+      0.2977617979497717,
+      0.31254445167994943,
+      0.3122537457163506,
+      0.29798221780116224,
+      0.2813694795345285,
+      0.2967384394977584,
+      0.31586501891650626,
+      0.30668523468655634,
+      0.33616294666976504,
+      0.3309912183149198,
+      0.3071112770717198,
+      0.29837464411590553,
+      0.2894861926260472,
+      0.22768735696553222
+    ]
+  },
+  "fusion": {
+    "verdict": "RIPE",
+    "quality_grade": "GRADE B (MARKETABLE)",
+    "is_desegregate": false,
+    "composite_defect_percentage": 9.67,
+    "reason": "Healthy sound fruit with firm flesh and vibrant peel"
+  }
+}

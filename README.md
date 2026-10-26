@@ -32,8 +32,9 @@ Open terminal on your Raspberry Pi 5 desktop:
 # Update system packages
 sudo apt update && sudo apt install -y python3-picamera2 python3-libgpiod python3-pil python3-tk python3-serial python3-opencv python3-numpy
 
-# Clone / Navigate to dragonfruit directory
-cd ~/dragonfruit
+# Navigate to project directory in /home/pi/Documents/
+cd /home/pi/Documents/dragonfruit
+# (or cd /home/pi/Documents if cloned directly into Documents)
 
 # Install required Python packages
 pip install -r requirements.txt --break-system-packages

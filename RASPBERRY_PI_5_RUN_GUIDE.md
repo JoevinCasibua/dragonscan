@@ -15,10 +15,10 @@ This step-by-step terminal instruction manual guides you through installing, con
 ---
 
 ## ⚡ Quick Start: 3 Commands to Launch
-If your environment is already set up, open the terminal in the project directory:
+If your environment is already set up, open the terminal in your project directory:
 
 ```bash
-cd ~/dragonfruit
+cd /home/pi/Documents/dragonfruit
 chmod +x run_dragonscan.sh
 ./run_dragonscan.sh
 ```
@@ -72,10 +72,14 @@ sudo usermod -a -G gpio $USER
 ---
 
 ### Step 4: Clone or Navigate to the DragonScan Directory
-If the project is located in `~/dragonfruit`:
+Navigate to your project directory in `/home/pi/Documents/`:
 
 ```bash
-cd ~/dragonfruit
+# If cloned into /home/pi/Documents/dragonfruit:
+cd /home/pi/Documents/dragonfruit
+
+# Or if cloned directly into /home/pi/Documents:
+# cd /home/pi/Documents
 ```
 
 Install any remaining Python packages (such as `ultralytics` for YOLOv11 if desired):
@@ -149,7 +153,7 @@ Launch the app onto the physical screen from your SSH terminal:
 ```bash
 export DISPLAY=:0
 export WAYLAND_DISPLAY=wayland-0
-cd ~/dragonfruit
+cd /home/pi/Documents/dragonfruit
 ./run_dragonscan.sh
 ```
 
@@ -157,7 +161,7 @@ cd ~/dragonfruit
 ```bash
 # Connect with -X or -Y flag
 ssh -Y pi@raspberrypi.local
-cd ~/dragonfruit
+cd /home/pi/Documents/dragonfruit
 python3 main.py
 ```
 
@@ -177,11 +181,11 @@ nano ~/.config/autostart/dragonscan.desktop
 [Desktop Entry]
 Type=Application
 Name=DragonScan
-Exec=/bin/bash -c "cd /home/pi/dragonfruit && ./run_dragonscan.sh"
+Exec=/bin/bash -c "cd /home/pi/Documents/dragonfruit && ./run_dragonscan.sh"
 Terminal=false
 X-GNOME-Autostart-enabled=true
 ```
-*(Replace `/home/pi/dragonfruit` with your exact folder path if different, e.g. `$HOME/dragonfruit`)*
+*(If cloned directly into `/home/pi/Documents`, update `cd /home/pi/Documents` accordingly)*
 
 3. Save with `Ctrl + O`, then exit with `Ctrl + X`.
 

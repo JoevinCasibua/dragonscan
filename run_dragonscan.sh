@@ -42,7 +42,27 @@ else
     exit 1
 fi
 
-# 3. Check Serial Port Permissions for Radar (/dev/ttyACM0 or /dev/ttyUSB0)
+# 3. Automatic Self-Healing: Verify cv2 (OpenCV) is installed, or auto-install in user venv!
+if ! $PYTHON_CMD -c "import cv2" &> /dev/null; then
+    echo "========================================================"
+    echo "  [AUTO-SETUP] OpenCV (cv2) not detected."
+    echo "  Configuring dedicated Raspberry Pi Python environment..."
+    echo "========================================================"
+    if [ ! -d "$SCRIPT_DIR/venv" ]; then
+        python3 -m venv --system-site-packages "$SCRIPT_DIR/venv" || python3 -m venv "$SCRIPT_DIR/venv" || true
+    fi
+    if [ -f "$SCRIPT_DIR/venv/bin/activate" ]; then
+        source "$SCRIPT_DIR/venv/bin/activate"
+        PYTHON_CMD="$SCRIPT_DIR/venv/bin/python3"
+        echo "[INFO] Installing OpenCV, NumPy, Pillow, PySerial into venv..."
+        pip install opencv-python numpy pillow pyserial || true
+    else
+        echo "[INFO] Attempting user-space pip install..."
+        pip3 install opencv-python numpy pillow pyserial --break-system-packages || true
+    fi
+fi
+
+# 4. Check Serial Port Permissions for Radar (/dev/ttyACM0 or /dev/ttyUSB0)
 for port in /dev/ttyACM0 /dev/ttyUSB0; do
     if [ -e "$port" ] && [ ! -r "$port" ]; then
         echo "[WARNING] $port exists but is not readable. Adding current user to dialout group recommended:"
@@ -50,6 +70,6 @@ for port in /dev/ttyACM0 /dev/ttyUSB0; do
     fi
 done
 
-# 4. Launch DragonScan GUI
+# 5. Launch DragonScan GUI
 echo "[INFO] Executing DragonScan Desktop Application..."
 exec $PYTHON_CMD main.py "$@"

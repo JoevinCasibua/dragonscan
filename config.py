@@ -1,6 +1,6 @@
 """
 Configuration settings for DragonScan Raspberry Pi 5 Desktop Application.
-Supports Camera Module 3 and Infineon BGT60TR13C 60GHz FMCW Radar.
+Supports Camera Module 3 and Hi-Link HLK-LD6002 (ANDAR ADTE2104 V2.0) 60GHz FMCW Radar.
 """
 
 from pathlib import Path
@@ -47,18 +47,19 @@ SHOW_TARGET_RETICLES = False      # Set to False to remove corner reticle bracke
 SHOW_HUD_BOX = False              # Set to False to remove embedded top-left HUD box on camera frame
 SHOW_CROSSHAIR = False            # Set to False to remove center crosshair on camera frame
 
-# Radar Hardware Configuration (Infineon BGT60TR13C 60 GHz FMCW)
-RADAR_AUTO_ANGLE_DETECTION = True   # Automatically detect radar incidence angle from fruit orientation & position
-RADAR_DEFAULT_ANGLE_DEGREES = 45.0  # Baseline nominal angle fallback
-RADAR_ANGLE_DEGREES = 45.0          # Legacy alias
+# Radar Hardware Configuration (Hi-Link HLK-LD6002 / ANDAR ADTE2104 V2.0 60 GHz FMCW)
+RADAR_SENSOR_MODEL = "HLK-LD6002"       # Hi-Link HLK-LD6002 (VERC V1.0) on ANDAR ADTE2104 V2.0
+RADAR_AUTO_ANGLE_DETECTION = True       # Automatically detect radar incidence angle from fruit orientation & position
+RADAR_DEFAULT_ANGLE_DEGREES = 45.0      # Baseline nominal angle fallback
+RADAR_ANGLE_DEGREES = 45.0              # Legacy alias
 RADAR_FREQUENCY_GHZ = 60.0
 RADAR_NUM_CHIRPS = 64
 RADAR_SAMPLES_PER_CHIRP = 128
-RADAR_BANDWIDTH_MHZ = 4000.0  # 4 GHz sweep (58-62 GHz)
-RADAR_PORT = "/dev/ttyACM0"   # Linux/Pi USB CDC port for Infineon board (or COM port on Windows)
-RADAR_BAUDRATE = 115200
+RADAR_BANDWIDTH_MHZ = 4000.0            # 4 GHz sweep (58-62 GHz)
+RADAR_PORT = "/dev/ttyUSB0"             # Linux/Pi USB port for HLK-LD6002 UART bridge (or /dev/ttyACM0, COM on Windows)
+RADAR_BAUDRATE = 115200                 # Standard HLK-LD6002 UART baud rate (115200 or 256000)
 RADAR_TIMEOUT_SEC = 2.0
-RADAR_SIMULATION_MODE = True  # Auto-fallback to high-fidelity radar simulation if device not plugged in
+RADAR_SIMULATION_MODE = True            # Auto-fallback to high-fidelity radar simulation if device not plugged in
 
 # Physical Calibration (Pixel to Millimeter ratio)
 # Standard scanning distance ~25 cm -> ~4.2 pixels per mm

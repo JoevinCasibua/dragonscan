@@ -1,26 +1,27 @@
 """
-Infineon BGT60TR13C 60GHz FMCW Radar Controller for DragonScan.
-Supports physical USB CDC/Serial interface and high-fidelity 45° incidence simulation.
-Measures subsurface dielectric properties and flesh degradation.
+Hi-Link HLK-LD6002 (ANDAR ADTE2104 V2.0) 60GHz FMCW Radar Controller for DragonScan.
+Supports physical USB UART interface (/dev/ttyUSB0, /dev/ttyACM0, COMx) and high-fidelity auto-angle simulation.
+Measures subsurface dielectric properties, range-FFT, and internal pulp flesh degradation.
 """
 
 import time
 import math
 import logging
 import numpy as np
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional, Tuple, List
 import config
 
 logger = logging.getLogger(__name__)
 
 class RadarController:
     """
-    Manages Infineon BGT60TR13C 60 GHz FMCW Radar operations.
-    Enforces the 45-degree incidence scanning sequence before optical capture.
+    Manages Hi-Link HLK-LD6002 (VERC V1.0) 60 GHz FMCW Radar mounted on ANDAR ADTE2104 V2.0 carrier.
+    Executes millimeter-wave subsurface penetration and dielectric decay estimation.
     """
     def __init__(self, port: str = config.RADAR_PORT, baudrate: int = config.RADAR_BAUDRATE):
         self.port = port
         self.baudrate = baudrate
+        self.sensor_model = getattr(config, "RADAR_SENSOR_MODEL", "HLK-LD6002")
         self.angle_degrees = getattr(config, "RADAR_DEFAULT_ANGLE_DEGREES", 45.0)
         self.auto_angle_mode = getattr(config, "RADAR_AUTO_ANGLE_DETECTION", True)
         self.num_chirps = config.RADAR_NUM_CHIRPS
@@ -34,28 +35,46 @@ class RadarController:
         self.last_scan_data: Optional[Dict[str, Any]] = None
 
     def initialize(self) -> bool:
-        """Initialize connection to Infineon Radar sensor or engage simulation mode."""
+        """Initialize connection to HLK-LD6002 Radar sensor or engage high-fidelity simulation."""
         try:
             import serial
-            try:
-                self.serial_conn = serial.Serial(
-                    port=self.port,
-                    baudrate=self.baudrate,
-                    timeout=config.RADAR_TIMEOUT_SEC
-                )
-                self.is_connected = True
-                self.simulation_mode = False
-                logger.info(f"Radar hardware connected on {self.port} at {self.baudrate} baud.")
-                return True
-            except Exception as e:
-                logger.info(f"Physical radar not detected on {self.port} ({e}). Falling back to simulation.")
+            import glob
+
+            candidate_ports: List[str] = [self.port]
+            # Auto-detect USB serial devices on Linux/Raspberry Pi
+            for p in ["/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyACM0", "/dev/ttyACM1"]:
+                if p not in candidate_ports:
+                    candidate_ports.append(p)
+            
+            # Auto-detect COM ports on Windows
+            for c in ["COM3", "COM4", "COM5", "COM6", "COM7", "COM8"]:
+                if c not in candidate_ports:
+                    candidate_ports.append(c)
+
+            for target_port in candidate_ports:
+                try:
+                    self.serial_conn = serial.Serial(
+                        port=target_port,
+                        baudrate=self.baudrate,
+                        timeout=config.RADAR_TIMEOUT_SEC
+                    )
+                    if self.serial_conn.is_open:
+                        self.port = target_port
+                        self.is_connected = True
+                        self.simulation_mode = False
+                        logger.info(f"HLK-LD6002 Radar hardware connected on {target_port} at {self.baudrate} baud.")
+                        return True
+                except Exception:
+                    continue
+
+            logger.info(f"Physical HLK-LD6002 radar not detected on candidate ports. Engaging simulation.")
         except ImportError:
             logger.info("pyserial library not found. Falling back to radar simulation.")
 
         # If physical device not detected, activate synthetic FMCW generator
         self.simulation_mode = True
         self.is_connected = True
-        logger.info(f"Radar controller initialized in Auto-Angle FMCW Simulation Mode.")
+        logger.info(f"HLK-LD6002 controller initialized in Auto-Angle FMCW Simulation Mode.")
         return True
 
     def scan(self, simulated_rot_level: float = 0.0, detected_angle: Optional[float] = None) -> Dict[str, Any]:

@@ -9,7 +9,7 @@ This step-by-step terminal instruction manual guides you through installing, con
 - **Hardware**: Raspberry Pi 5 (4GB or 8GB recommended) with Active Cooler.
 - **Operating System**: **Raspberry Pi OS (Bookworm) 64-bit with Desktop**.
 - **Camera**: Raspberry Pi Camera Module 3 (Standard or Wide) connected to **CAM/DISP0** or **CAM/DISP1** via a 22-pin to 15-pin mini-CSI ribbon cable.
-- **Radar**: Infineon BGT60TR13C 60 GHz FMCW Radar connected via USB-C to a Pi 5 **USB 3.0** (blue) port.
+- **Radar**: Hi-Link HLK-LD6002 (VERC V1.0) 60 GHz FMCW Radar on ANDAR ADTE2104 V2.0 carrier board connected via USB-C to a Pi 5 **USB 3.0** (blue) port.
 - **Display**: Official 7" Touchscreen, HDMI Monitor, or Wayland/X11 display (`1024x600` or `1280x720`+).
 
 ---
@@ -100,11 +100,11 @@ rpicam-hello -t 3000
 ```
 *A camera preview window should pop up for 3 seconds. If it reports `No cameras available`, verify the 22-pin ribbon cable orientation and run `sudo raspi-config` to ensure camera interfaces are enabled.*
 
-#### 2. Test 60 GHz Radar USB Connection:
+#### 2. Test Hi-Link HLK-LD6002 60 GHz Radar USB Connection:
 ```bash
-ls -l /dev/ttyACM* /dev/ttyUSB*
+ls -l /dev/ttyUSB* /dev/ttyACM*
 ```
-*You should see `/dev/ttyACM0` or `/dev/ttyUSB0`. If no device appears, verify the USB-C cable supports data transfer.*
+*You should see `/dev/ttyUSB0` or `/dev/ttyACM0` (the ANDAR ADTE2104 CH340/USB-UART bridge). If no device appears, verify the USB-C cable is firmly seated and supports data transfer.*
 
 #### 3. Test GPIO Sorter Pin (Pin 17):
 ```bash
@@ -131,7 +131,7 @@ python3 main.py
 
 The application will initialize:
 1. **Camera Module 3** (via `picamera2` driver with auto-exposure locking).
-2. **Infineon 60 GHz FMCW Radar** on `/dev/ttyACM0` (or automatic fallback to high-fidelity simulation if disconnected).
+2. **Hi-Link HLK-LD6002 (ANDAR ADTE2104)** on `/dev/ttyUSB0` or `/dev/ttyACM0` (with auto-port discovery and high-fidelity simulation fallback).
 3. **GPIO Sorter Actuator** on `gpiochip4` Pin 17.
 4. **Full-Screen 7" Touchscreen Cockpit** with live oscillating up-and-down radar scanning effect.
 

@@ -22,7 +22,19 @@ from typing import Optional, Dict, Any, List
 
 import cv2
 import numpy as np
-from PIL import Image, ImageTk
+
+# Safe Pillow / ImageTk import with native Tkinter PPM fallback for Raspberry Pi OS
+try:
+    from PIL import Image, ImageTk
+    HAS_PIL_IMAGETK = True
+except (ImportError, Exception):
+    try:
+        from PIL import Image
+    except Exception:
+        Image = None
+    ImageTk = None
+    HAS_PIL_IMAGETK = False
+
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 
@@ -1718,9 +1730,16 @@ class DragonScanApp(tk.Tk):
             new_h = max(1, int(h * scale))
 
             resized = cv2.resize(bgr_frame, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
-            rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
-            pil_img = Image.fromarray(rgb)
-            img_tk = ImageTk.PhotoImage(pil_img)
+            
+            if HAS_PIL_IMAGETK and Image is not None and ImageTk is not None:
+                rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
+                pil_img = Image.fromarray(rgb)
+                img_tk = ImageTk.PhotoImage(pil_img)
+            else:
+                # 100% Zero-Dependency Native Tkinter PhotoImage via in-memory PPM!
+                # Works out-of-the-box on every Linux / Raspberry Pi OS without python3-pil.imagetk
+                _, ppm_buffer = cv2.imencode(".ppm", resized)
+                img_tk = tk.PhotoImage(data=ppm_buffer.tobytes())
 
             self.cam_canvas.delete("all")
             pos_x = (c_w - new_w) // 2

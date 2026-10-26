@@ -15,7 +15,8 @@ logger = logging.getLogger(__name__)
 class CameraController:
     """
     Manages camera acquisition for Raspberry Pi 5.
-    Auto-detects picamera2 (Pi Camera Module 3) or falls back to cv2.VideoCapture.
+    Optimized for Logitech C270 HD Webcam via USB (UVC/V4L2) with 720p 30 FPS MJPG streaming.
+    Supports multi-device index auto-discovery and high-fidelity synthetic fallback.
     """
     def __init__(self, width: int = config.CAMERA_WIDTH, height: int = config.CAMERA_HEIGHT, fps: int = config.CAMERA_FPS):
         self.width = width
@@ -25,52 +26,79 @@ class CameraController:
         self.backend_type = "NONE"
         self.picam2 = None
         self.cap = None
+        self.device_index = getattr(config, "CAMERA_INDEX", 0)
         self.last_frame = None
 
     def initialize(self) -> bool:
-        """Initialize camera driver."""
-        # 1. Try picamera2 (Standard on Raspberry Pi OS Bookworm with Pi 5)
-        if config.USE_PICAMERA2:
+        """Initialize camera driver (prioritizing Logitech C270 USB Webcam)."""
+        # 1. Primary: OpenCV VideoCapture for Logitech C270 USB HD Webcam
+        if not getattr(config, "USE_PICAMERA2", False):
+            candidate_indices = [self.device_index]
+            for idx in [0, 1, 2, 4]:
+                if idx not in candidate_indices:
+                    candidate_indices.append(idx)
+
+            # API backends to try (V4L2 on Linux/Pi, DirectShow on Windows)
+            api_backends = []
+            if hasattr(cv2, 'CAP_V4L2'):
+                api_backends.append(cv2.CAP_V4L2)
+            if hasattr(cv2, 'CAP_DSHOW'):
+                api_backends.append(cv2.CAP_DSHOW)
+            api_backends.append(cv2.CAP_ANY)
+
+            for idx in candidate_indices:
+                for api in api_backends:
+                    try:
+                        cap = cv2.VideoCapture(idx, api)
+                        if cap.isOpened():
+                            # Configure Logitech C270 parameters
+                            # Use MJPG for smooth 30 FPS at 1280x720 over USB 2.0
+                            try:
+                                fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+                                cap.set(cv2.CAP_PROP_FOURCC, fourcc)
+                            except Exception:
+                                pass
+                            
+                            cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+                            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+                            cap.set(cv2.CAP_PROP_FPS, self.fps)
+                            # Minimize frame lag by capping buffer size
+                            cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+                            # Verify read
+                            ret, test_frame = cap.read()
+                            if ret and test_frame is not None:
+                                self.cap = cap
+                                self.device_index = idx
+                                self.backend_type = "OPENCV_USB_C270"
+                                self.is_running = True
+                                logger.info(f"Logitech C270 USB Camera initialized successfully on device {idx} ({self.width}x{self.height} @ {self.fps}fps).")
+                                return True
+                            else:
+                                cap.release()
+                    except Exception as e:
+                        logger.debug(f"Device index {idx} with backend {api} failed: {e}")
+
+        # 2. Secondary fallback: Picamera2 (if specifically configured for CSI camera)
+        if getattr(config, "USE_PICAMERA2", False):
             try:
                 from picamera2 import Picamera2
-                logger.info("Initializing Picamera2 for Camera Module 3...")
+                logger.info("Initializing Picamera2 for CSI Camera...")
                 self.picam2 = Picamera2()
                 config_cam = self.picam2.create_video_configuration(
                     main={"size": (self.width, self.height), "format": "RGB888"}
                 )
                 self.picam2.configure(config_cam)
                 self.picam2.start()
-                
-                # Lock controls if requested
-                if config.CAMERA_EXPOSURE_LOCKED:
-                    try:
-                        self.picam2.set_controls({"AeEnable": False, "ExposureTime": 15000})
-                    except Exception as e:
-                        logger.warning(f"Could not lock exposure: {e}")
-                
                 self.backend_type = "PICAMERA2"
                 self.is_running = True
                 logger.info("Picamera2 successfully initialized.")
                 return True
-            except (ImportError, Exception) as e:
-                logger.info(f"Picamera2 not available ({e}). Falling back to OpenCV VideoCapture.")
+            except Exception as e:
+                logger.debug(f"Picamera2 init failed: {e}")
 
-        # 2. Try OpenCV VideoCapture (Standard USB / V4L2 / Laptop webcam fallback)
-        try:
-            self.cap = cv2.VideoCapture(config.CAMERA_INDEX, cv2.CAP_DSHOW if hasattr(cv2, 'CAP_DSHOW') else cv2.CAP_ANY)
-            if self.cap.isOpened():
-                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
-                self.cap.set(cv2.CAP_PROP_FPS, self.fps)
-                self.backend_type = "OPENCV"
-                self.is_running = True
-                logger.info(f"OpenCV camera initialized on device {config.CAMERA_INDEX}.")
-                return True
-        except Exception as e:
-            logger.warning(f"OpenCV camera init failed: {e}")
-
-        # 3. Synthetic frame generator fallback (allows running app without hardware connected)
-        logger.warning("No physical camera detected. Operating in Synthetic Frame Simulation Mode.")
+        # 3. Synthetic frame generator fallback (allows running without physical camera connected)
+        logger.warning("No physical USB or CSI camera detected. Operating in High-Fidelity Simulation Mode.")
         self.backend_type = "SYNTHETIC"
         self.is_running = True
         return True

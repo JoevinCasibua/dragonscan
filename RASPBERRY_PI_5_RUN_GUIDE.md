@@ -8,7 +8,7 @@ This step-by-step terminal instruction manual guides you through installing, con
 ## 📋 System Prerequisites
 - **Hardware**: Raspberry Pi 5 (4GB or 8GB recommended) with Active Cooler.
 - **Operating System**: **Raspberry Pi OS (Bookworm) 64-bit with Desktop**.
-- **Camera**: Raspberry Pi Camera Module 3 (Standard or Wide) connected to **CAM/DISP0** or **CAM/DISP1** via a 22-pin to 15-pin mini-CSI ribbon cable.
+- **Camera**: Logitech C270 HD Webcam connected via any Raspberry Pi 5 **USB port** (enumerates as `/dev/video0`).
 - **Radar**: Hi-Link HLK-LD6002 (VERC V1.0) 60 GHz FMCW Radar on ANDAR ADTE2104 V2.0 carrier board connected via USB-C to a Pi 5 **USB 3.0** (blue) port.
 - **Display**: Official 7" Touchscreen, HDMI Monitor, or Wayland/X11 display (`1024x600` or `1280x720`+).
 
@@ -94,11 +94,15 @@ pip install -r requirements.txt
 
 ### Step 5: Verify Connected Hardware (Health Check)
 
-#### 1. Test Camera Module 3:
+#### 1. Test Logitech C270 USB Webcam:
 ```bash
-rpicam-hello -t 3000
+# Check if C270 is detected on USB bus
+lsusb | grep -i "Logitech"
+
+# Verify video device nodes exist
+ls -l /dev/video*
 ```
-*A camera preview window should pop up for 3 seconds. If it reports `No cameras available`, verify the 22-pin ribbon cable orientation and run `sudo raspi-config` to ensure camera interfaces are enabled.*
+*You should see `Logitech, Inc. Webcam C270` and `/dev/video0`. (Optional: install `v4l-utils` via `sudo apt install v4l-utils` and run `v4l2-ctl --list-devices` to view device capabilities).*
 
 #### 2. Test Hi-Link HLK-LD6002 60 GHz Radar USB Connection:
 ```bash
@@ -130,7 +134,7 @@ python3 main.py
 ```
 
 The application will initialize:
-1. **Camera Module 3** (via `picamera2` driver with auto-exposure locking).
+1. **Logitech C270 USB HD Webcam** (via OpenCV V4L2 with low-latency MJPG streaming @ 720p 30 FPS).
 2. **Hi-Link HLK-LD6002 (ANDAR ADTE2104)** on `/dev/ttyUSB0` or `/dev/ttyACM0` (with auto-port discovery and high-fidelity simulation fallback).
 3. **GPIO Sorter Actuator** on `gpiochip4` Pin 17.
 4. **Full-Screen 7" Touchscreen Cockpit** with live oscillating up-and-down radar scanning effect.

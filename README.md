@@ -4,7 +4,7 @@
 
 The system enforces a **sequential 2-stage scanning pipeline**:
 1. **Stage 1: 45° FMCW Radar Subsurface Scan (Hi-Link HLK-LD6002 / ANDAR ADTE2104 60 GHz)**: Measures dielectric permittivity, water absorption, and flesh firmness beneath the peel.
-2. **Stage 2: Optical Camera Capture (Raspberry Pi Camera Module 3)**: Quantifies peel color (Ripe Magenta vs Bract Green vs Necrotic Rot), geometric size (Length, Width, Surface Area mm²/cm²), skin roughness, and **precise percentage of rotten peel area**.
+2. **Stage 2: Optical Camera Capture (Logitech C270 USB HD Webcam)**: Quantifies peel color (Ripe Magenta vs Bract Green vs Necrotic Rot), geometric size (Length, Width, Surface Area mm²/cm²), skin roughness, and **precise percentage of rotten peel area** at 720p 30 FPS.
 3. **Automated Desegregation**: If the rotten percentage exceeds the configured threshold (default 15.0%) or internal radar decay is flagged, the system commands the Raspberry Pi 5 GPIO actuator to physically sort out/eject the degraded fruit.
 4. **On-Device Model Training**: Train machine learning models directly inside the desktop GUI using experimental captures saved in [`RIPE/`](file:///c:/Users/paul/Documents/dragonfruit/RIPE) and [`ROTTEN/`](file:///c:/Users/paul/Documents/dragonfruit/ROTTEN).
 
@@ -12,8 +12,7 @@ The system enforces a **sequential 2-stage scanning pipeline**:
 
 ## 🛠️ Hardware Bill of Materials (Raspberry Pi 5 Setup)
 - **Raspberry Pi 5 (8GB RAM)**: Edge controller running Raspberry Pi OS Bookworm (64-bit).
-- **Raspberry Pi Camera Module 3**: Wide/Standard with locked focus and exposure.
-- **Pi 5 Camera Cable (22-pin to 15-pin mini CSI)**: Specific cable for Pi 5 CSI port.
+- **Logitech C270 HD Webcam**: 720p USB 2.0 camera connected via USB-A port (`/dev/video0`), streaming MJPG at 30 FPS.
 - **Hi-Link HLK-LD6002 (VERC V1.0) 60 GHz FMCW Radar Kit**: Mounted on ANDAR ADTE2104 V2.0 carrier board with on-board microstrip patch antennas, connected via USB-C to Pi 5 USB 3.0 port (`/dev/ttyUSB0` or `/dev/ttyACM0`).
 - **Physical 45° Fixed Sensor Rig**: Frame holding radar sensor at 45° angle of incidence and camera vertically at 250 mm height.
 - **Raspberry Pi Active Cooler**: Maintains temperature during real-time 30 FPS processing.

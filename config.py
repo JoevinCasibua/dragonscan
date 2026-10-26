@@ -21,12 +21,14 @@ DATASET_UNRIPE_DIR.mkdir(parents=True, exist_ok=True)
 APP_NAME = "DragonScan v5.2.0 - FMCW Radar & Vision Segregation"
 APP_VERSION = "5.2.0-SOVEREIGN"
 
-# Camera Hardware Configuration (Raspberry Pi Camera Module 3)
+# Camera Hardware Configuration (Logitech C270 HD Webcam via USB)
+CAMERA_MODEL = "Logitech C270 HD Webcam (USB)"
 CAMERA_WIDTH = 1280
 CAMERA_HEIGHT = 720
 CAMERA_FPS = 30
-CAMERA_INDEX = 0  # Default OpenCV camera fallback index
-USE_PICAMERA2 = True  # Try picamera2 first if available on Raspberry Pi OS Bookworm
+CAMERA_INDEX = 0          # Default USB camera device index (/dev/video0 or DirectShow index 0)
+CAMERA_FOURCC = "MJPG"    # MJPG enables smooth 30 FPS 720p on Logitech C270 USB 2.0
+USE_PICAMERA2 = False     # False for USB webcam (Logitech C270); True only for Raspberry Pi CSI ribbon cameras
 CAMERA_EXPOSURE_LOCKED = True
 CAMERA_WHITE_BALANCE_LOCKED = True
 

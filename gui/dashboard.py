@@ -155,6 +155,9 @@ class DragonScanApp(tk.Tk):
         # Initial Dynamic Live Accuracy & Dataset Health Refresh
         self.after(400, self._update_live_accuracy_metrics)
 
+        # Initial Baseline Radar Sweep so Oscilloscope Starts Active Immediately
+        self.after(600, self._initial_radar_baseline)
+
     def _toggle_fullscreen(self, event=None):
         """Toggles true borderless fullscreen on F11 keypress or button click."""
         self.is_fullscreen = not getattr(self, "is_fullscreen", False)
@@ -205,6 +208,15 @@ class DragonScanApp(tk.Tk):
         self.radar.initialize()
         self.sorter.initialize()
 
+    def _initial_radar_baseline(self):
+        """Generates initial baseline radar measurement so oscilloscope starts active immediately."""
+        try:
+            init_res = self.radar.scan(simulated_rot_level=0.0, detected_angle=45.0)
+            self.current_radar_data = init_res
+            self._update_radar_telemetry(init_res)
+        except Exception as e:
+            logger.warning(f"Initial radar baseline warning: {e}")
+
     def _setup_custom_styles(self):
         """Configures ttk styles for blueprint dark aesthetic."""
         style = ttk.Style(self)
@@ -243,7 +255,7 @@ class DragonScanApp(tk.Tk):
 
         self._create_telemetry_chip(chips_box, f"CAM: {self.camera.backend_type}",
                                     CLR_GREEN if self.camera.backend_type != "SYNTHETIC" else CLR_YELLOW)
-        radar_label = "RADAR: HARDWARE (AUTO)" if not self.radar.simulation_mode else "RADAR: AUTO SIM"
+        radar_label = "60GHz FMCW: ONLINE" if not self.radar.simulation_mode else "60GHz FMCW: EMU"
         self._create_telemetry_chip(chips_box, radar_label,
                                     CLR_GREEN if not self.radar.simulation_mode else CLR_YELLOW)
         self._create_telemetry_chip(chips_box, f"ACTUATOR: {self.sorter.backend}", CLR_BLUE)
@@ -306,12 +318,12 @@ class DragonScanApp(tk.Tk):
         self.top_hud.lift()
 
         tk.Label(
-            self.top_hud, text="● LIVE LOGITECH C270 USB OPTICAL FEED (REAL-TIME HUD OVERLAY)",
+            self.top_hud, text="● DUAL-MODAL ACTIVE: 60.0 GHz FMCW RADAR + LOGITECH C270 USB OPTICAL BENCH",
             font=("Segoe UI", 9, "bold"), bg="#070c18", fg=CLR_GREEN
         ).pack(side=tk.LEFT)
 
         tk.Label(
-            self.top_hud, text="30 FPS | 250mm OPTICAL BENCH | AUTO-ANGLE FMCW RADAR | DOUBLE-CLICK FOR FULLSCREEN [F11]",
+            self.top_hud, text="60.0 GHz FMCW (4GHz BW) | 30 FPS @ 250mm | DOUBLE-CLICK FOR FULLSCREEN [F11]",
             font=("Consolas", 8, "bold"), bg="#070c18", fg=CLR_TXT_MUTED
         ).pack(side=tk.RIGHT)
 
@@ -399,14 +411,14 @@ class DragonScanApp(tk.Tk):
         radar_top = tk.Frame(col2_card, bg=CLR_CARD)
         radar_top.pack(fill=tk.X)
         self.lbl_radar_top_title = tk.Label(
-            radar_top, text="⚡ AUTO-ANGLE RADAR (60 GHz)",
+            radar_top, text="⚡ 60 GHz FMCW RADAR (ACTIVE)",
             font=("Segoe UI", 7, "bold"), bg=CLR_CARD, fg=CLR_YELLOW
         )
         self.lbl_radar_top_title.pack(side=tk.LEFT)
 
         self.radar_log_box = tk.Label(
-            radar_top, text="Echo: -- dB",
-            font=("Consolas", 7), bg=CLR_CARD, fg=CLR_TXT_MUTED
+            radar_top, text="Freq: 60.0 GHz | fb: 16.7 kHz",
+            font=("Consolas", 7, "bold"), bg=CLR_CARD, fg=CLR_CYAN
         )
         self.radar_log_box.pack(side=tk.RIGHT)
 
@@ -416,14 +428,14 @@ class DragonScanApp(tk.Tk):
         r_bot = tk.Frame(col2_card, bg=CLR_CARD)
         r_bot.pack(fill=tk.X, pady=(1, 0))
         self.lbl_chamber_radar_decay = tk.Label(
-            r_bot, text="Radar Decay: 0.000", font=("Segoe UI", 7, "bold"),
+            r_bot, text="Radar Decay: 0.000 [Sound]", font=("Segoe UI", 7, "bold"),
             bg=CLR_CARD, fg=CLR_YELLOW
         )
         self.lbl_chamber_radar_decay.pack(side=tk.LEFT)
 
         self.lbl_chamber_radar_dielectric = tk.Label(
-            r_bot, text="Dielectric: 64.0 (28dB)", font=("Segoe UI", 7),
-            bg=CLR_CARD, fg=CLR_TXT_MUTED
+            r_bot, text="εr: 64.0 | 28 dB @ 25 cm", font=("Segoe UI", 7),
+            bg=CLR_CARD, fg=CLR_TXT_MAIN
         )
         self.lbl_chamber_radar_dielectric.pack(side=tk.RIGHT)
 
@@ -1685,7 +1697,8 @@ class DragonScanApp(tk.Tk):
     # REAL-TIME VIDEO & SCAN SEQUENCER
     # =========================================================================
     def _video_stream_worker(self):
-        """Background thread acquiring camera frames at ~30 FPS."""
+        """Background thread acquiring camera frames at ~30 FPS and continuous radar sensing."""
+        last_radar_poll = 0.0
         while self.is_streaming:
             ret, frame = self.camera.get_frame()
             if ret and frame is not None:
@@ -1696,6 +1709,19 @@ class DragonScanApp(tk.Tk):
 
                 annotated = analysis.get("annotated_frame", frame)
                 self.ui_queue.put(("FRAME", annotated, analysis))
+
+            # Periodic Live Radar Background Sensing (~1.2s interval) while streaming
+            now = time.time()
+            if not self.is_scanning and (now - last_radar_poll >= 1.2):
+                last_radar_poll = now
+                try:
+                    sim_rot = (self.current_analysis["rotten_percentage"] / 100.0) if self.current_analysis else 0.0
+                    det_angle = self.current_analysis.get("detected_angle_deg", 45.0) if self.current_analysis else 45.0
+                    live_radar = self.radar.scan(simulated_rot_level=sim_rot, detected_angle=det_angle)
+                    self.current_radar_data = live_radar
+                    self.ui_queue.put(("RADAR_UPDATE", live_radar, None))
+                except Exception:
+                    pass
 
             time.sleep(0.033)
 
@@ -2163,7 +2189,7 @@ class DragonScanApp(tk.Tk):
             swal.resizable(False, False)
 
             # Center over main dashboard window
-            sw_w, sw_h = 440, 520
+            sw_w, sw_h = 440, 545
             self.update_idletasks()
             rx = self.winfo_rootx()
             ry = self.winfo_rooty()
@@ -2232,7 +2258,17 @@ class DragonScanApp(tk.Tk):
             r1 = tk.Frame(metrics_box, bg=CLR_CARD)
             r1.pack(fill=tk.X, pady=1)
             tk.Label(r1, text=f"Size: {len_w} ({area_cm2:.1f} cm²)", font=("Segoe UI", 8), bg=CLR_CARD, fg=CLR_TXT_MAIN).pack(side=tk.LEFT)
-            tk.Label(r1, text=f"Dielectric: {diel_val:.1f}", font=("Segoe UI", 8), bg=CLR_CARD, fg=CLR_TXT_MUTED).pack(side=tk.RIGHT)
+            tk.Label(r1, text=f"Dielectric: εr = {diel_val:.1f}", font=("Segoe UI", 8), bg=CLR_CARD, fg=CLR_TXT_MUTED).pack(side=tk.RIGHT)
+
+            carrier_val = radar_res.get("carrier_freq_ghz", 60.0) if radar_res else 60.0
+            beat_val = radar_res.get("beat_freq_khz", 16.7) if radar_res else 16.7
+            dist_val = radar_res.get("peak_distance_cm", 25.0) if radar_res else 25.0
+            power_val = radar_res.get("peak_power_db", 28.0) if radar_res else 28.0
+
+            r2 = tk.Frame(metrics_box, bg=CLR_CARD)
+            r2.pack(fill=tk.X, pady=1)
+            tk.Label(r2, text=f"Radar: {carrier_val:.1f} GHz FMCW (fb: {beat_val:.1f} kHz)", font=("Segoe UI", 8, "bold"), bg=CLR_CARD, fg=CLR_CYAN).pack(side=tk.LEFT)
+            tk.Label(r2, text=f"Echo: {power_val:.0f} dB @ {dist_val:.1f} cm", font=("Segoe UI", 8), bg=CLR_CARD, fg=CLR_TXT_MUTED).pack(side=tk.RIGHT)
 
             # 4. Accuracy & Genuine Dataset Details Card
             acc_box = tk.Frame(main_card, bg=CLR_INPUT, bd=1, relief="solid", padx=10, pady=7)
@@ -2281,18 +2317,29 @@ class DragonScanApp(tk.Tk):
             logger.error(f"SweetAlert error: {e}")
 
     def _update_radar_telemetry(self, radar_data: Dict[str, Any]):
-        """Updates radar cards and plots waveform."""
+        """Updates radar cards and plots Range-FFT frequency waveform."""
         decay_idx = radar_data.get("internal_decay_index", 0.0)
         dielectric = radar_data.get("dielectric_constant", 65.0)
         power_db = radar_data.get("peak_power_db", 0.0)
+        dist_cm = radar_data.get("peak_distance_cm", 25.0)
+        carrier_ghz = radar_data.get("carrier_freq_ghz", 60.0)
+        beat_khz = radar_data.get("beat_freq_khz", 16.7)
 
         flag_str = " [ROT!]" if radar_data.get("is_internal_rot_flag") else " [Sound]"
+        self.lbl_radar_top_title.config(
+            text=f"⚡ 60 GHz FMCW RADAR ({carrier_ghz:.1f} GHz)"
+        )
+        self.radar_log_box.config(
+            text=f"fb: {beat_khz:.1f} kHz | {power_db:.0f} dB",
+            fg=CLR_CYAN
+        )
         self.lbl_chamber_radar_decay.config(
             text=f"Radar Decay: {decay_idx:.3f}{flag_str}",
             fg=CLR_RED if radar_data.get("is_internal_rot_flag") else CLR_YELLOW
         )
         self.lbl_chamber_radar_dielectric.config(
-            text=f"Dielectric: {dielectric:.1f} ({power_db:.0f}dB)"
+            text=f"εr: {dielectric:.1f} | {dist_cm:.1f} cm",
+            fg=CLR_TXT_MAIN
         )
         self._plot_radar_spectrum(radar_data)
 
@@ -2312,8 +2359,20 @@ class DragonScanApp(tk.Tk):
         max_val = max(1.0, max(spectrum))
         pts = []
 
-        margin_x, margin_y = 32, 12
+        margin_x, margin_y = 32, 14
         plot_w, plot_h = w - (margin_x * 2), h - (margin_y * 2)
+
+        # Radar Frequency & Bandwidth Annotation on Top
+        carrier_ghz = radar_data.get("carrier_freq_ghz", 60.0)
+        beat_khz = radar_data.get("beat_freq_khz", 16.7)
+        dist_cm = radar_data.get("peak_distance_cm", 25.0)
+        power_db = radar_data.get("peak_power_db", 0.0)
+
+        self.radar_canvas.create_text(
+            margin_x + 2, 2,
+            text=f"fc: {carrier_ghz:.1f} GHz | B: 4.0 GHz | fb: {beat_khz:.1f} kHz",
+            anchor="nw", fill=CLR_CYAN, font=("Consolas", 7, "bold")
+        )
 
         for step in range(3):
             gy = margin_y + int(plot_h * (step / 2.0))
@@ -2333,7 +2392,7 @@ class DragonScanApp(tk.Tk):
         peak_x = margin_x + int(plot_w * (peak_idx / max(1, len(spectrum) - 1)))
         peak_y = (h - margin_y) - int(plot_h * (spectrum[peak_idx] / max_val))
         self.radar_canvas.create_oval(peak_x - 3, peak_y - 3, peak_x + 3, peak_y + 3, fill=CLR_RED, outline="#fff")
-        self.radar_canvas.create_text(peak_x, max(10, peak_y - 8), text=f"{bins[peak_idx]:.1f}cm", fill=CLR_CYAN, font=("Segoe UI", 7, "bold"))
+        self.radar_canvas.create_text(peak_x, max(14, peak_y - 8), text=f"{dist_cm:.1f}cm ({power_db:.0f}dB)", fill=CLR_CYAN, font=("Segoe UI", 7, "bold"))
 
     def _test_radar_sweep(self):
         """Triggers manual radar test sweep with live up-and-down radar scan animation."""

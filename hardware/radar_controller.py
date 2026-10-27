@@ -185,10 +185,21 @@ class RadarController:
         # Water/dielectric constant estimate (Dragon fruit healthy pulp: ~60-70, decaying pulp: >78)
         estimated_dielectric_constant = float(62.0 + (internal_decay_index * 16.5))
 
+        # FMCW Beat Frequency fb = 2 * (B / T_sweep) * R / c
+        # Physical parameters: T_sweep = 400us, B = 4000 MHz (60-64 GHz)
+        sweep_time_sec = 4e-4
+        chirp_slope = (self.bandwidth_mhz * 1e6) / sweep_time_sec
+        dist_m = max(peak_distance_cm, 5.0) / 100.0
+        beat_freq_hz = (2.0 * chirp_slope * dist_m) / 3e8
+        beat_freq_khz = round(beat_freq_hz / 1000.0, 1)
+
         return {
             "timestamp": timestamp,
             "angle_degrees": self.angle_degrees,
             "frequency_ghz": self.center_freq_ghz,
+            "carrier_freq_ghz": round(self.center_freq_ghz, 2),
+            "bandwidth_mhz": self.bandwidth_mhz,
+            "beat_freq_khz": beat_freq_khz,
             "num_chirps": self.num_chirps,
             "samples_per_chirp": self.samples_per_chirp,
             "peak_power_db": round(peak_power_db, 2),

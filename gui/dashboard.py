@@ -5,7 +5,7 @@ Features:
 - Blueprint-accurate industrial agritech cyber aesthetic.
 - Circular radial scan progress gauge and results card matching front LCD screen.
 - Comprehensive Accuracy Test Suite, Benchmark Runner, and Interactive Settings Panel.
-- Real-time Camera Module 3 HUD, 45° FMCW Radar Range-FFT spectrum, and RP1 GPIO 17 sorter.
+- Real-time Logitech C270 USB HUD, 60 GHz FMCW Radar Range-FFT spectrum, and RP1 GPIO 17 sorter.
 - Split-view real photo and analytics explorer for genuine RIPE and ROTTEN datasets.
 """
 
@@ -245,7 +245,7 @@ class DragonScanApp(tk.Tk):
                              bg=CLR_PANEL, fg=CLR_CYAN)
         lbl_title.pack(side=tk.LEFT)
 
-        lbl_subtitle = tk.Label(brand_box, text=" | 7\" EDGE CONTROLLER (AUTO-ANGLE FMCW RADAR + CAM v3)",
+        lbl_subtitle = tk.Label(brand_box, text=" | 7\" STATION CONTROLLER (60 GHz FMCW RADAR + LOGITECH C270)",
                                 font=("Segoe UI", 9, "bold"), bg=CLR_PANEL, fg=CLR_TXT_MUTED)
         lbl_subtitle.pack(side=tk.LEFT, padx=(6, 0), pady=(3, 0))
 

@@ -1,10 +1,10 @@
 @echo off
-title DRAGONSCAN v5.2.0 - Raspberry Pi 5 Station Controller
+title DRAGONSCAN v5.2.0 - 60 GHz FMCW Radar + Logitech C270 Optical Station
 cd /d "%~dp0"
 
 echo ========================================================
 echo   DRAGONSCAN v5.2.0 - 7-INCH STATION CONTROLLER
-echo   45-DEGREE FMCW RADAR + CAMERA MODULE 3 VISION SYSTEM
+echo   60 GHz FMCW RADAR + LOGITECH C270 HD OPTICAL SYSTEM
 echo ========================================================
 echo.
 

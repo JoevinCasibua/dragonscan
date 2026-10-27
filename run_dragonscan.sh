@@ -1,7 +1,7 @@
 #!/bin/bash
 # ========================================================
 #   DRAGONSCAN v5.2.0 - Raspberry Pi 5 Station Launcher
-#   45° FMCW Radar + Camera Module 3 Vision System
+#   60 GHz FMCW Radar + Logitech C270 HD Optical System
 # ========================================================
 
 set -e
@@ -9,7 +9,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "========================================================"
-echo "  DRAGONSCAN v5.2.0 - STARTING STATION CONTROLLER..."
+echo "  DRAGONSCAN v5.2.0 - 7-INCH STATION CONTROLLER"
+echo "  60 GHz FMCW RADAR + LOGITECH C270 HD OPTICAL SYSTEM"
 echo "  Target: Raspberry Pi 5 (8GB) | Bookworm 64-bit"
 echo "========================================================"
 

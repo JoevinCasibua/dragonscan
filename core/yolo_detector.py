@@ -29,6 +29,11 @@ class YoloDetector:
 
     def _initialize_model(self):
         """Attempts to load Ultralytics YOLO model or prepares graceful fallback."""
+        if not getattr(config, "USE_YOLO_IF_AVAILABLE", False):
+            self.backend = "OPENCV_FALLBACK"
+            self.is_loaded = False
+            return
+
         try:
             from ultralytics import YOLO
             # 1. Check if model exists locally in models directory, otherwise download/load

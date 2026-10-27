@@ -1,6 +1,6 @@
 """
 Configuration settings for DragonScan Raspberry Pi 5 Desktop Application.
-Supports Camera Module 3 and Hi-Link HLK-LD6002 (ANDAR ADTE2104 V2.0) 60GHz FMCW Radar.
+Supports Logitech C270 HD Webcam and Hi-Link HLK-LD6002 (ANDAR ADTE2104 V2.0) 60GHz FMCW Radar.
 """
 
 from pathlib import Path
@@ -18,7 +18,7 @@ DATASET_ROTTEN_DIR.mkdir(parents=True, exist_ok=True)
 DATASET_UNRIPE_DIR.mkdir(parents=True, exist_ok=True)
 
 # Application Information
-APP_NAME = "DragonScan v5.2.0 - FMCW Radar & Vision Segregation"
+APP_NAME = "DragonScan v5.2.0 - 60 GHz FMCW Radar & Logitech C270 Optical Station"
 APP_VERSION = "5.2.0-SOVEREIGN"
 
 # Camera Hardware Configuration (Logitech C270 HD Webcam via USB)
@@ -32,8 +32,8 @@ USE_PICAMERA2 = False     # False for USB webcam (Logitech C270); True only for 
 CAMERA_EXPOSURE_LOCKED = True
 CAMERA_WHITE_BALANCE_LOCKED = True
 
-# YOLO Deep Learning Configuration (YOLOv11 / COCO / Dragonfruit weights)
-USE_YOLO_IF_AVAILABLE = True
+# YOLO Deep Learning Configuration (Disabled by default to ensure instant boot without Torch hanging)
+USE_YOLO_IF_AVAILABLE = False
 YOLO_MODEL_NAME = "yolo11n.pt"  # Pretrained YOLOv11 nano or coco.pt / custom model
 YOLO_CONFIDENCE_THRESHOLD = 0.35
 

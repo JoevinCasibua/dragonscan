@@ -61,7 +61,7 @@ RADAR_BANDWIDTH_MHZ = 4000.0            # 4 GHz sweep (58-62 GHz)
 RADAR_PORT = "/dev/ttyUSB0"             # Linux/Pi USB port for HLK-LD6002 UART bridge (or /dev/ttyACM0, COM on Windows)
 RADAR_BAUDRATE = 115200                 # Standard HLK-LD6002 UART baud rate (115200 or 256000)
 RADAR_TIMEOUT_SEC = 2.0
-RADAR_SIMULATION_MODE = True            # Auto-fallback to high-fidelity radar simulation if device not plugged in
+RADAR_SIMULATION_MODE = False            # Mandate physical 60GHz radar hardware first! (Only falls back if disconnected)
 
 # Physical Calibration (Pixel to Millimeter ratio)
 # Standard scanning distance ~25 cm -> ~4.2 pixels per mm

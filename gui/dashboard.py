@@ -2326,8 +2326,11 @@ class DragonScanApp(tk.Tk):
         beat_khz = radar_data.get("beat_freq_khz", 16.7)
 
         flag_str = " [ROT!]" if radar_data.get("is_internal_rot_flag") else " [Sound]"
+        is_hw = not radar_data.get("is_simulated", True)
+        hw_tag = f"[{self.radar.port} ONLINE]" if is_hw else f"({carrier_ghz:.1f} GHz)"
         self.lbl_radar_top_title.config(
-            text=f"⚡ 60 GHz FMCW RADAR ({carrier_ghz:.1f} GHz)"
+            text=f"⚡ 60 GHz FMCW {hw_tag}",
+            fg=CLR_GREEN if is_hw else CLR_YELLOW
         )
         self.radar_log_box.config(
             text=f"fb: {beat_khz:.1f} kHz | {power_db:.0f} dB",
@@ -2367,11 +2370,19 @@ class DragonScanApp(tk.Tk):
         beat_khz = radar_data.get("beat_freq_khz", 16.7)
         dist_cm = radar_data.get("peak_distance_cm", 25.0)
         power_db = radar_data.get("peak_power_db", 0.0)
+        is_hw = not radar_data.get("is_simulated", True)
 
         self.radar_canvas.create_text(
             margin_x + 2, 2,
             text=f"fc: {carrier_ghz:.1f} GHz | B: 4.0 GHz | fb: {beat_khz:.1f} kHz",
             anchor="nw", fill=CLR_CYAN, font=("Consolas", 7, "bold")
+        )
+
+        hw_text = f"● HARDWARE ({self.radar.port})" if is_hw else "○ SIMULATED"
+        self.radar_canvas.create_text(
+            w - margin_x, 2,
+            text=hw_text,
+            anchor="ne", fill=CLR_GREEN if is_hw else CLR_YELLOW, font=("Consolas", 7, "bold")
         )
 
         for step in range(3):

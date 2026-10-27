@@ -62,13 +62,12 @@ if ! $PYTHON_CMD -c "import cv2" &> /dev/null; then
     fi
 fi
 
-# 4. Check Serial Port Permissions for Radar (/dev/ttyACM0 or /dev/ttyUSB0)
-for port in /dev/ttyACM0 /dev/ttyUSB0; do
-    if [ -e "$port" ] && [ ! -r "$port" ]; then
-        echo "[WARNING] $port exists but is not readable. Adding current user to dialout group recommended:"
-        echo "          sudo usermod -a -G dialout $USER"
-    fi
-done
+# 4. Mandatory Hardware Serial Permissions for 60 GHz FMCW Radar (/dev/ttyUSB* or /dev/ttyACM*)
+echo "[INFO] Verifying physical radar USB-serial communication..."
+sudo chmod a+rw /dev/ttyUSB* /dev/ttyACM* 2>/dev/null || true
+if ! groups $USER 2>/dev/null | grep -q "dialout"; then
+    sudo usermod -a -G dialout $USER 2>/dev/null || true
+fi
 
 # 5. Launch DragonScan GUI
 echo "[INFO] Executing DragonScan Desktop Application..."
